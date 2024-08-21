@@ -1,15 +1,11 @@
 #!/bin/bash
 
-# Ensure that pip is installed
-if ! command -v pip &> /dev/null; then
-    echo "pip not found, installing pip..."
-    sudo apt-get update
-    sudo apt-get install -y python3-pip
-fi
+# Ensure pip and unzip are installed
+sudo apt-get update
+sudo apt-get install -y python3-pip unzip
 
 # Update and install system dependencies
-sudo apt-get update
-sudo apt-get install -y libsndfile1-dev ffmpeg enchant libenchant1c2a libenchant-dev
+sudo apt-get install -y libsndfile1-dev ffmpeg
 
 # Install PyTorch
 pip install -U torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
