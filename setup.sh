@@ -29,9 +29,9 @@ cd ../..
 
 # Setup Trainer and TTS
 cd Trainer
-pip install -e .[all]
+pip install -e .
 cd ../TTS
-pip install -e .[all]
+pip install -e .
 
 # Ensure the destination directory exists
 mkdir -p /content/TTS/TTS/bin
