@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Ensure that pip is installed
+if ! command -v pip &> /dev/null; then
+    echo "pip not found, installing pip..."
+    sudo apt-get update
+    sudo apt-get install -y python3-pip
+fi
+
 # Update and install system dependencies
 sudo apt-get update
 sudo apt-get install -y libsndfile1-dev ffmpeg enchant libenchant1c2a libenchant-dev
@@ -14,7 +21,7 @@ git clone https://github.com/gokulkarthik/Trainer.git
 git clone https://github.com/gokulkarthik/TTS.git
 git clone https://github.com/AI4Bharat/Indic-TTS.git
 
-# Install Python dependencies
+# Install Python dependencies for IndicTrans2
 cd IndicTrans2/huggingface_interface
 pip install nltk sacremoses pandas regex mock transformers>=4.33.2 mosestokenizer
 python3 -c "import nltk; nltk.download('punkt')"
@@ -29,6 +36,9 @@ cd Trainer
 pip install -e .[all]
 cd ../TTS
 pip install -e .[all]
+
+# Ensure the destination directory exists
+mkdir -p /content/TTS/TTS/bin
 cp TTS/bin/synthesize.py /content/TTS/TTS/bin
 
 # Download TTS checkpoints
