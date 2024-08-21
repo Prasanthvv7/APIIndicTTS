@@ -1,17 +1,13 @@
 #!/bin/bash
 
-# Check for root privileges
-if [ "$(id -u)" -ne "0" ]; then
-  echo "This script must be run as root or with sudo." 1>&2
-  exit 1
-fi
+
 
 # Update and install system dependencies
 echo "Updating package list..."
-apt-get update
+sudo apt-get update
 
 echo "Installing system dependencies..."
-apt-get install -y libsndfile1-dev ffmpeg enchant libenchant1c2a libenchant-dev
+sudo apt-get install -y libsndfile1-dev ffmpeg enchant libenchant1c2a libenchant-dev
 
 # Install PyTorch
 echo "Installing PyTorch..."
