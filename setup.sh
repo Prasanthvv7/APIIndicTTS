@@ -1,13 +1,24 @@
 #!/bin/bash
 
+# Check for root privileges
+if [ "$(id -u)" -ne "0" ]; then
+  echo "This script must be run as root or with sudo." 1>&2
+  exit 1
+fi
+
 # Update and install system dependencies
-sudo apt-get update
-sudo apt-get install -y libsndfile1-dev ffmpeg enchant libenchant1c2a libenchant-dev
+echo "Updating package list..."
+apt-get update
+
+echo "Installing system dependencies..."
+apt-get install -y libsndfile1-dev ffmpeg enchant libenchant1c2a libenchant-dev
 
 # Install PyTorch
+echo "Installing PyTorch..."
 pip install -U torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
 
 # Clone necessary repositories
+echo "Cloning repositories..."
 git clone https://github.com/AI4Bharat/IndicTrans2.git
 git clone https://github.com/VarunGumma/IndicTransTokenizer.git
 git clone https://github.com/gokulkarthik/Trainer.git
@@ -15,29 +26,34 @@ git clone https://github.com/gokulkarthik/TTS.git
 git clone https://github.com/AI4Bharat/Indic-TTS.git
 
 # Install Python dependencies
-cd IndicTrans2/huggingface_interface
-
+echo "Installing Python dependencies for IndicTrans2..."
+cd IndicTrans2/huggingface_interface || exit
 pip install nltk sacremoses pandas regex mock transformers>=4.33.2 mosestokenizer
 python3 -c "import nltk; nltk.download('punkt')"
 pip install bitsandbytes scipy accelerate datasets
 pip install sentencepiece
-cd /Users/prasanth/PycharmProjects/APIindicTTS/IndicTransTokenizer
+cd - || exit
 
+echo "Installing Python dependencies for IndicTransTokenizer..."
+cd IndicTransTokenizer || exit
 pip install --editable ./
-cd /Users/prasanth/PycharmProjects/APIindicTTS
+cd - || exit
 
 # Setup Trainer and TTS
-cd /Users/prasanth/PycharmProjects/APIindicTTS/Trainer
-
+echo "Installing Python dependencies for Trainer..."
+cd Trainer || exit
 pip install -e .
-cd /Users/prasanth/PycharmProjects/APIindicTTS/TTS
+cd - || exit
 
+echo "Installing Python dependencies for TTS..."
+cd TTS || exit
 pip install -e .
-cp TTS/bin/synthesize.py /content/TTS/TTS/bin
-
+cp TTS/bin/synthesize.py /content/TTS/TTS/bin || { echo "Failed to copy synthesize.py"; exit 1; }
+cd - || exit
 
 # Download TTS checkpoints
-cd /Users/prasanth/PycharmProjects/APIindicTTS
+echo "Downloading TTS checkpoints..."
+cd .. || exit
 wget https://github.com/AI4Bharat/Indic-TTS/archive/refs/tags/v1-checkpoints-release.zip
 wget https://github.com/AI4Bharat/Indic-TTS/releases/download/v1-checkpoints-release/te.zip
 wget https://github.com/AI4Bharat/Indic-TTS/releases/download/v1-checkpoints-release/en.zip
@@ -45,6 +61,4 @@ unzip v1-checkpoints-release.zip
 unzip te.zip
 unzip en.zip
 
-## Install additional Python packages
-#pip install pyenchant
-#pip install -r TTS/requirements.txt
+echo "Setup complete!"
