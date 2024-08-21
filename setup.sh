@@ -1,11 +1,8 @@
 #!/bin/bash
 
-# Ensure pip and unzip are installed
-sudo apt-get update
-sudo apt-get install -y python3-pip unzip
-
 # Update and install system dependencies
-sudo apt-get install -y libsndfile1-dev ffmpeg
+sudo apt-get update
+sudo apt-get install -y libsndfile1-dev ffmpeg enchant libenchant1c2a libenchant-dev
 
 # Install PyTorch
 pip install -U torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
@@ -17,28 +14,30 @@ git clone https://github.com/gokulkarthik/Trainer.git
 git clone https://github.com/gokulkarthik/TTS.git
 git clone https://github.com/AI4Bharat/Indic-TTS.git
 
-# Install Python dependencies for IndicTrans2
+# Install Python dependencies
 cd IndicTrans2/huggingface_interface
+
 pip install nltk sacremoses pandas regex mock transformers>=4.33.2 mosestokenizer
 python3 -c "import nltk; nltk.download('punkt')"
 pip install bitsandbytes scipy accelerate datasets
 pip install sentencepiece
-cd ../../IndicTransTokenizer
+cd /Users/prasanth/PycharmProjects/APIindicTTS/IndicTransTokenizer
+
 pip install --editable ./
-cd ../..
+cd /Users/prasanth/PycharmProjects/APIindicTTS
 
 # Setup Trainer and TTS
-cd Trainer
-pip install -e .
-cd ../TTS
-pip install -e .
+cd /Users/prasanth/PycharmProjects/APIindicTTS/Trainer
 
-# Ensure the destination directory exists
-mkdir -p /content/TTS/TTS/bin
+pip install -e .
+cd /Users/prasanth/PycharmProjects/APIindicTTS/TTS
+
+pip install -e .
 cp TTS/bin/synthesize.py /content/TTS/TTS/bin
 
+
 # Download TTS checkpoints
-cd ..
+cd /Users/prasanth/PycharmProjects/APIindicTTS
 wget https://github.com/AI4Bharat/Indic-TTS/archive/refs/tags/v1-checkpoints-release.zip
 wget https://github.com/AI4Bharat/Indic-TTS/releases/download/v1-checkpoints-release/te.zip
 wget https://github.com/AI4Bharat/Indic-TTS/releases/download/v1-checkpoints-release/en.zip
@@ -46,6 +45,6 @@ unzip v1-checkpoints-release.zip
 unzip te.zip
 unzip en.zip
 
-# Install additional Python packages
-pip install pyenchant
-pip install -r TTS/requirements.txt
+## Install additional Python packages
+#pip install pyenchant
+#pip install -r TTS/requirements.txt
